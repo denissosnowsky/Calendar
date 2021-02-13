@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calendar planner</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" integrity="sha512-oHDEc8Xed4hiW6CxD7qjbnI+B07vDdX7hEPTvn9pSZO1bcRqHp8mj9pyr+8RVC2GmtEfI2Bi9Ke9Ass0as+zpg==" crossorigin="anonymous" />
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <script src="js/bundle.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="calendarWindow">
+                <div class="container">
+                    <div class="calendarWindow__wrapper">
+                        <div class="calendarWindow__wrapper-header">
+                            <div class="calendarWindow__wrapper-header-inscripion"><span>Calendar</span></div>
+                            <div class="calendarWindow__wrapper-header-listInput">
+                                <div class="calendarWindow__wrapper-header-listInput-button">
+                                    <div class="calendarWindow__wrapper-header-listInput-button-text"><span>All members</span></div>
+                                    <div class="calendarWindow__wrapper-header-listInput-button-arrow"></div>
+                                </div>
+                                <div class="calendarWindow__wrapper-header-listInput-list">
+                                    <div class="calendarWindow__wrapper-header-listInput-list-person"><span>All members</span></div>
+                                </div>
+                            </div>
+                            <div class="calendarWindow__wrapper-header-addButton">
+                                <div class="calendarWindow__wrapper-header-addButton-button"><div class="calendarWindow__wrapper-header-addButton-button-wrapper">New event</div><div class="calendarWindow__wrapper-header-addButton-button-plus">+</div></div>
+                            </div>
+                        </div>
+                        <div class="calendarWindow__wrapper-content">
+                            <div class="calendarWindow__wrapper-content-day"><span>Name</span></div>
+                            <div class="calendarWindow__wrapper-content-day"><span>Mon</span></div>
+                            <div class="calendarWindow__wrapper-content-day"><span>Tue</span></div>
+                            <div class="calendarWindow__wrapper-content-day"><span>Wed</span></div>
+                            <div class="calendarWindow__wrapper-content-day"><span>Thu</span></div>
+                            <div class="calendarWindow__wrapper-content-day"><span>Fri</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>10:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>11:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>12:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>13:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>14:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>15:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>16:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>17:00</span></div>
+                            <div class="calendarWindow__wrapper-content-hour"><span>18:00</span></div>
+                            <div class="calendarWindow__wrapper-content-vaults"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="creatorWindow">
+                <div class="container">
+                    <div class="creatorWindow__wrapper">
+                        <div class="creatorWindow__wrapper-creation">
+                            <div class="creatorWindow__wrapper-creation-text"><span>Name of the event:</span></div>
+                            <div class="creatorWindow__wrapper-creation-button">
+                                <input class="creatorWindow__wrapper-creation-button-inner creatorWindow__wrapper-creation-button-inner-input">
+                            </div>
+                            <div class="creatorWindow__wrapper-creation-text"><span>Participants:</span></div>
+                            <div class="creatorWindow__wrapper-creation-button">
+                                <div class="creatorWindow__wrapper-creation-button-inner" data-down>
+                                    <div class="creatorWindow__wrapper-creation-button-inner-text"><span></span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-inner-arrow"></div>
+                                </div>
+                                <div class="creatorWindow__wrapper-creation-button-list" data-list id="members">
+                                    <div class="creatorWindow__wrapper-creation-button-list-person"><span>All members</span></div>
+                                </div>
+                            </div>
+                            <div class="creatorWindow__wrapper-creation-text"><span>Day:</span></div>
+                            <div class="creatorWindow__wrapper-creation-button">
+                                <div class="creatorWindow__wrapper-creation-button-inner" data-down>
+                                    <div class="creatorWindow__wrapper-creation-button-inner-text"><span></span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-inner-arrow"></div>
+                                </div>
+                                <div class="creatorWindow__wrapper-creation-button-list" data-list id="days">
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-dayId="1"><span>Monday</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-dayId="2"><span>Tuesday</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-dayId="3"><span>Wednesday</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-dayId="4"><span>Thursday</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-dayId="5"><span>Friday</span></div>
+                                </div>
+                            </div>
+                            <div class="creatorWindow__wrapper-creation-text"><span>Time:</span></div>
+                            <div class="creatorWindow__wrapper-creation-button">
+                                <div class="creatorWindow__wrapper-creation-button-inner" data-down>
+                                    <div class="creatorWindow__wrapper-creation-button-inner-text"><span></span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-inner-arrow"></div>
+                                </div>
+                                <div class="creatorWindow__wrapper-creation-button-list" data-list id="hours">
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="1"><span>10:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="2"><span>11:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="3"><span>12:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="4"><span>13:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="5"><span>14:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="6"><span>15:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="7"><span>16:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="8"><span>17:00</span></div>
+                                    <div class="creatorWindow__wrapper-creation-button-list-person" data-hourId="9"><span>18:00</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="creatorWindow__wrapper-approval">
+                            <div class="creatorWindow__wrapper-approval-cancel"><span>Cancel</span></div>
+                            <div class="creatorWindow__wrapper-approval-create"><span>Create</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="deleteWindow" style="display: none;">
+                <div class="deleteWindow__window">
+                    <div class="deleteWindow__window-question">
+                        <div class="deleteWindow__window-question-text"><span class="deleteWindow__window-question-text-span">Are you sure you want to delete <span class="deleteWindow__window-question-text-span-eventName"></span> event?</span></div>
+                    </div>
+                    <div class="deleteWindow__window-answers">
+                        <div class="deleteWindow__window-answers-no"><span>No</span></div>
+                        <div class="deleteWindow__window-answers-yes"><span>Yes</span></div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        
+    </body>
+</html>

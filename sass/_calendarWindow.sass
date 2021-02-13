@@ -1,0 +1,129 @@
+.calendarWindow
+    height: 100%
+    width: 100%
+    &__wrapper
+        height: 100%
+        width: 100%
+        display: grid
+        grid-template-rows: 2fr 12fr
+        &-header
+            display: grid
+            grid-template-columns: 0.53fr 0.24fr 0.23fr
+            &-inscripion
+                span
+                    font-weight: 600
+                    text-align: left
+                    font-size: 50px
+                    height: fit-content
+            &-listInput
+                position: relative
+                &-button
+                    +arrowButon
+                    top: 50%
+                    transform: translateY(-50%)
+                    cursor: pointer
+                &-list
+                    +list
+            &-addButton
+                &-button
+                    +greyField
+                    top: 50%
+                    transform: translateY(-50%)
+                    margin-left: 10%
+                    
+                    display: grid
+                    grid-template-columns: 2.4fr 1fr
+                    &-wrapper
+                        position: relative
+                        height: fit-content
+                        top: 50%
+                        transform: translateY(-50%)
+                        text-align: center
+                        font-weight: 600
+                        font-size: 27px
+                        justify-self: end
+                    &-plus
+                        position: relative
+                        height: fit-content
+                        top: 53%
+                        transform: translateY(-50%)
+                        text-align: center
+                        font-weight: 600
+                        font-size: 27px
+                        justify-self: start
+                        align-items: center
+                        padding-left: 5px
+        &-content
+            background-color: #999
+            display: grid
+            grid-template-columns: repeat(6, 1fr)
+            grid-template-rows: repeat(10, 1fr)
+            grid-gap: 2px
+            padding: 2px
+            &-day
+                background-color: $button-color
+                height: 100%
+                width: 100%
+                span
+                    display: block
+                    width: fit-content
+                    height: fit-content
+                    margin: 0 auto
+                    position: relative
+                    top: 50%
+                    transform: translateY(-50%)
+                    font-size: 20px
+                    font-weight: 700
+            &-hour
+                background-color: #fff
+                height: 100%
+                width: 100%
+                span
+                    display: block
+                    width: fit-content
+                    height: fit-content
+                    margin: 0 auto
+                    position: relative
+                    top: 50%
+                    transform: translateY(-50%)
+                    font-size: 18px
+                    font-weight: 500
+            &-vaults
+                grid-area: 2/2/11/7
+                background-color: #999
+                display: grid
+                grid-template-columns: repeat(5, 1fr)
+                grid-template-rows: repeat(9, 1fr)
+                grid-gap: 2px
+                &-order
+                    background-color: #fff
+                    &-appeared
+                        display: grid
+                        grid-template-columns: 9fr 1.5fr
+                        height: 100%
+                        background-color: #bef7f4
+                        display: none
+                        cursor: grab
+                        &-text
+                            font-weight: 500
+                            font-size: 22px
+                            &-balancer
+                                display: block
+                                height: fit-content
+                                width: fit-content
+                                margin: 0 auto
+                                position: relative
+                                top: 50%
+                                transform: translateY(-50%)
+                        &-image
+                            transition: all .5s
+                            img
+                                height: 50%
+                                width: 50%
+                                object-fit: contain
+                                display: block  
+                                margin: 0 auto
+                                position: relative
+                                top: 50%
+                                transform: translateY(-50%)
+                                cursor: pointer

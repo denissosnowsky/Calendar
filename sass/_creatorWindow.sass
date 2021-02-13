@@ -1,0 +1,123 @@
+.creatorWindow
+    height: 100%
+    width: 100%
+    display: none
+    &__wrapper
+        height: 100%
+        width: 100%
+        display: grid
+        grid-template-columns: 7fr 5fr
+        grid-template-rows: 8fr 2fr
+        &-creation
+            grid-area: 1/1/2/2
+            display: grid
+            grid-template-columns: 2.3fr 2.7fr
+            grid-template-rows: 1fr 1fr 1fr 1fr
+            &-text
+                span
+                    font-size: 25px
+                    font-weight: 500
+                    display: block
+                    position: relative
+                    top: 50%
+                    transform: translateY(-50%)
+                    width: fit-content
+                    margin-left: 50px
+            &-button
+                position: relative
+                height: 92px
+                width: 325px
+                align-self: center
+                &-inner
+                    +arrowButon
+                    top: 50%
+                    transform: translateY(-50%)
+                    width: 100%
+                    cursor: pointer
+                    &-input
+                        outline: none
+                        font-size: 25px
+                        font-weight: 400
+                        text-align: center
+                &-list
+                    +list
+                    top: 77.5%
+                    min-height: 20px
+                    overflow: auto
+        &-approval
+            grid-area: 2/2/3/3
+            display: grid
+            grid-template-columns: 1fr 1fr
+            column-gap: 20px
+            &-cancel
+                +greyField
+                align-self: center
+                span
+                    font-size: 25px
+                    font-weight: 500
+                    display: block
+                    position: relative
+                    top: 50%
+                    transform: translateY(-50%)
+                    width: fit-content
+                    margin: 0 auto
+            &-create
+                +greyField
+                align-self: center
+                span
+                    font-size: 25px
+                    font-weight: 500
+                    display: block
+                    position: relative
+                    top: 50%
+                    transform: translateY(-50%)
+                    width: fit-content
+                    margin: 0 auto
+    &__notation
+        position: absolute
+        top: 0
+        height: 60px
+        width: 100%
+        background-color: rgba(255, 0, 0, 0.2)
+        grid-template-columns: 1fr 20fr 1fr
+        display: none
+        &-firstCross
+            height: 60px
+            width: 100%
+            &-wrapper
+                height: fit-content
+                width: fit-content
+                position: relative
+                top: 50%
+                transform: translateY(-50%)
+                img
+                    height: 80%
+                    width: 80%
+                    object-fit: cover
+                    margin: 0 auto
+                    display: block
+        &-text
+            span
+                padding-left: 10px
+                display: block
+                position: relative
+                top: 40%
+                color: $notion-color
+                font-size: 25px
+                font-weight: 400
+        &-lastCross
+            height: 60px
+            width: 100%
+            &-wrapper
+                height: fit-content
+                width: fit-content
+                position: relative
+                top: 50%
+                transform: translateY(-50%)
+                cursor: pointer
+                img
+                    height: 80%
+                    width: 80%
+                    object-fit: cover
+                    margin: 0 auto
+                    display: block
