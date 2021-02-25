@@ -287,7 +287,8 @@ const store = {
             members: []
         }
     ],
-    members: ["Dmitry", "Oleg", "Maria", "Natalia", "Artem", "Denis", "Inna"]
+    members: ["Dmitry", "Oleg", "Maria", "Natalia", "Artem", "Denis", "Inna"],
+    admins: ["Denis", "Inna"]
 };
 
 function emptyTheVault(vault){
@@ -303,6 +304,58 @@ function fillTheVault(vault, text, members){
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
+
+/***/ }),
+
+/***/ "./js/modules/store/userClasses.js":
+/*!*****************************************!*\
+  !*** ./js/modules/store/userClasses.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "User": () => (/* binding */ User),
+/* harmony export */   "Admin": () => (/* binding */ Admin)
+/* harmony export */ });
+/* harmony import */ var _windows_calendarWindow_functions_deleteEvent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../windows/calendarWindow/functions/deleteEvent */ "./js/modules/windows/calendarWindow/functions/deleteEvent.js");
+/* harmony import */ var _windows_calendarWindow_buttons_newEventButton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../windows/calendarWindow/buttons/newEventButton */ "./js/modules/windows/calendarWindow/buttons/newEventButton.js");
+/* harmony import */ var _windows_calendarWindow_functions_moveVaults__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../windows/calendarWindow/functions/moveVaults */ "./js/modules/windows/calendarWindow/functions/moveVaults.js");
+
+
+
+
+
+
+class User{
+    constructor(name){
+        this.name = name;
+    }
+    createEvent(){
+        console.log('no authority for the operation');
+    }
+    deleteTheEvent(){
+        console.log('no authority for the operation');
+    }
+    moveTheEvent(){
+        console.log('no authority for the operation');
+    }
+}
+
+class Admin extends User{
+    constructor(name){
+        super(name)
+    }
+    createEvent(){
+        (0,_windows_calendarWindow_buttons_newEventButton__WEBPACK_IMPORTED_MODULE_1__.default)();
+    }
+    deleteTheEvent(){
+        (0,_windows_calendarWindow_functions_deleteEvent__WEBPACK_IMPORTED_MODULE_0__.default)();
+    }
+    moveTheEvent(){
+        (0,_windows_calendarWindow_functions_moveVaults__WEBPACK_IMPORTED_MODULE_2__.default)();
+    }
+}
 
 /***/ }),
 
@@ -487,21 +540,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _buttons_memberListButton__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./buttons/memberListButton */ "./js/modules/windows/calendarWindow/buttons/memberListButton.js");
-/* harmony import */ var _buttons_newEventButton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./buttons/newEventButton */ "./js/modules/windows/calendarWindow/buttons/newEventButton.js");
-/* harmony import */ var _functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./functions/renderTheCalendar */ "./js/modules/windows/calendarWindow/functions/renderTheCalendar.js");
+/* harmony import */ var _functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./functions/renderTheCalendar */ "./js/modules/windows/calendarWindow/functions/renderTheCalendar.js");
+/* harmony import */ var _functions_login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./functions/login */ "./js/modules/windows/calendarWindow/functions/login.js");
 
+//import newEventButton from "./buttons/newEventButton";
 
 
 
 
 function calendarComponent(){
-    (0,_functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_2__.default)();
+    (0,_functions_login__WEBPACK_IMPORTED_MODULE_2__.default)();
+    (0,_functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
     (0,_buttons_memberListButton__WEBPACK_IMPORTED_MODULE_0__.default)();
-    (0,_buttons_newEventButton__WEBPACK_IMPORTED_MODULE_1__.default)();
+    //newEventButton();
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (calendarComponent);
-
 
 /***/ }),
 
@@ -589,6 +643,105 @@ function filterMembers(){
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (filterMembers);
+
+/***/ }),
+
+/***/ "./js/modules/windows/calendarWindow/functions/login.js":
+/*!**************************************************************!*\
+  !*** ./js/modules/windows/calendarWindow/functions/login.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "logedUser": () => (/* binding */ logedUser)
+/* harmony export */ });
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _store_userClasses__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../store/userClasses */ "./js/modules/store/userClasses.js");
+
+
+
+
+let logedUser;
+
+function login(){
+    const memberList = document.querySelector('.loginWindow__window-selection-listInput-list'),
+        listBtn = document.querySelector('.loginWindow__window-selection-listInput-button'),
+        loginWindow = document.querySelector('.loginWindow'),
+        listBtnText = document.querySelector('.loginWindow__window-selection-listInput-button-text'),
+        listBtnTextSpan = document.querySelector('.loginWindow__window-selection-listInput-button-text span'),
+        listBtnArrow = document.querySelector('.loginWindow__window-selection-listInput-button-arrow'),
+        confirmBtn = document.querySelector('.loginWindow__window-answers-confirm'),
+        createBtn = document.querySelector('.calendarWindow__wrapper-header-addButton-button');
+    let listItemsOfMembersInCalendar,
+        nameInTheCalendar,
+        widthOfNameInTheCalendar,
+        widthOfNameInTheCalendarWithoutPX;
+
+    class MemberList{
+        constructor(name, parent, value){
+            this.name = name;
+            this.parent = parent;
+            this.value = value;
+        }
+        render() {
+            const name = document.createElement('div');
+            name.classList.add("loginWindow__window-selection-listInput-list-person");
+            name.innerHTML = `
+                    <span>${this.name}</span>
+            `;
+            this.parent.append(name);
+        }
+    }
+
+    _store_store__WEBPACK_IMPORTED_MODULE_0__.default.members.forEach((item, i)=>{
+        new MemberList(item, memberList).render();
+        listItemsOfMembersInCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person');
+        nameInTheCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person')[0];
+        widthOfNameInTheCalendar = window.getComputedStyle(nameInTheCalendar).height;
+        widthOfNameInTheCalendarWithoutPX = widthOfNameInTheCalendar.replace(/\D/g, '');
+    });
+
+    if(memberList.querySelectorAll('div').length>3){
+        memberList.style.height = widthOfNameInTheCalendarWithoutPX*3 + "px";
+        memberList.style.overflow = "auto";
+    }
+
+    listBtn.addEventListener('click', ()=>{
+        memberList.classList.toggle('activeBlock');
+    });
+    
+    loginWindow.addEventListener('click', (e)=>{
+        if(e.target && e.target!=listBtn && e.target!=listBtnText && e.target!=listBtnTextSpan && e.target!=listBtnArrow){
+            memberList.classList.remove('activeBlock');    
+        }
+        listItemsOfMembersInCalendar.forEach((el, i)=>{
+            if(e.target==el || e.target==el.querySelector('span')){
+                listBtnTextSpan.innerHTML=el.querySelector('span').innerHTML;
+            }
+        });
+
+    });
+
+
+
+    confirmBtn.addEventListener('click', ()=>{
+        let chosenName = listBtnTextSpan.innerHTML;
+        if(_store_store__WEBPACK_IMPORTED_MODULE_0__.default.admins.indexOf(chosenName)!=-1){
+            logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.Admin(chosenName);
+            logedUser.createEvent();
+        } else{
+            logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.User(chosenName);
+            createBtn.style.opacity = '.5';
+        }
+        loginWindow.style.display = 'none';
+    });
+    
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (login);
+
 
 /***/ }),
 
@@ -696,14 +849,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
-/* harmony import */ var _deleteEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./deleteEvent */ "./js/modules/windows/calendarWindow/functions/deleteEvent.js");
-/* harmony import */ var _filterMembers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filterMembers */ "./js/modules/windows/calendarWindow/functions/filterMembers.js");
-/* harmony import */ var _moveVaults__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./moveVaults */ "./js/modules/windows/calendarWindow/functions/moveVaults.js");
-/* harmony import */ var _vaultsClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./vaultsClass */ "./js/modules/windows/calendarWindow/functions/vaultsClass.js");
+/* harmony import */ var _filterMembers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filterMembers */ "./js/modules/windows/calendarWindow/functions/filterMembers.js");
+/* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./login */ "./js/modules/windows/calendarWindow/functions/login.js");
+/* harmony import */ var _vaultsClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vaultsClass */ "./js/modules/windows/calendarWindow/functions/vaultsClass.js");
+
+//import deleteEvent from "./deleteEvent";
 
 
-
-
+//import moveVaults from "./moveVaults";
 
 
 function renderTheCalendar(){
@@ -721,11 +874,18 @@ function renderTheCalendar(){
         } else {
             display = "none";
         }
-        new _vaultsClass__WEBPACK_IMPORTED_MODULE_4__.default(vaultsWrapper, item.text, item.isOrdered, display, item.id).render();
+        new _vaultsClass__WEBPACK_IMPORTED_MODULE_3__.default(vaultsWrapper, item.text, item.isOrdered, display, item.id).render();
     });
-    (0,_moveVaults__WEBPACK_IMPORTED_MODULE_3__.default)();
-    (0,_filterMembers__WEBPACK_IMPORTED_MODULE_2__.default)();
-    (0,_deleteEvent__WEBPACK_IMPORTED_MODULE_1__.default)();
+    //moveVaults();
+    (0,_filterMembers__WEBPACK_IMPORTED_MODULE_1__.default)();
+    //deleteEvent();
+    if(_login__WEBPACK_IMPORTED_MODULE_2__.logedUser){
+        _login__WEBPACK_IMPORTED_MODULE_2__.logedUser.moveTheEvent();
+    }
+    if(_login__WEBPACK_IMPORTED_MODULE_2__.logedUser){
+        _login__WEBPACK_IMPORTED_MODULE_2__.logedUser.deleteTheEvent();
+    }
+    
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (renderTheCalendar);

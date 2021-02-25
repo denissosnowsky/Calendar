@@ -1,0 +1,64 @@
+.loginWindow
+    position: fixed
+    height: 100%
+    width: 100%
+    background-color: rgba(255, 255, 255, 0)
+    top: 0px
+    display: none
+    &__window
+        height: 250px
+        width: 550px
+        background-color: #fff
+        position: relative
+        top: 50%
+        transform: translateY(-50%)
+        margin: 0 auto
+        border: 2px solid #000
+        border-radius: 10px
+        display: grid
+        grid-template-rows: 2fr 2fr 2fr
+        padding-left: 20px
+        padding-right: 20px
+        &-question
+            &-text
+                font-size: 27px
+                font-weight: 500
+                width: 90%
+                height: fit-content
+                position: relative
+                top: 50%
+                transform: translateY(-50%)
+                margin: 0 auto
+                text-align: center
+                line-height: 40px
+        &-answers
+            display: grid
+            grid-template-columns: 1fr
+            &-confirm
+                +greyField
+                justify-self: center
+                align-self: center
+                width: 70%
+                span
+                    font-size: 25px
+                    font-weight: 500
+                    display: block
+                    position: relative
+                    top: 50%
+                    transform: translateY(-50%)
+                    width: fit-content
+                    margin: 0 auto
+        &-selection
+            &-listInput
+                position: relative
+                &-button
+                    +arrowButon
+                    cursor: pointer
+                    width: 70%
+                    margin: 0 auto
+                &-list
+                    +list
+                    width: 54%
+                    top: 100%
+                    transform: translateY(-2px)
+                    left: 17%

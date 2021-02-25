@@ -1,7 +1,8 @@
 import store from "../../../store/store";
-import deleteEvent from "./deleteEvent";
+//import deleteEvent from "./deleteEvent";
 import filterMembers from "./filterMembers";
-import moveVaults from "./moveVaults";
+import { logedUser } from "./login";
+//import moveVaults from "./moveVaults";
 import Vaults from "./vaultsClass";
 
 function renderTheCalendar(){
@@ -21,9 +22,16 @@ function renderTheCalendar(){
         }
         new Vaults(vaultsWrapper, item.text, item.isOrdered, display, item.id).render();
     });
-    moveVaults();
+    //moveVaults();
     filterMembers();
-    deleteEvent();
+    //deleteEvent();
+    if(logedUser){
+        logedUser.moveTheEvent();
+    }
+    if(logedUser){
+        logedUser.deleteTheEvent();
+    }
+    
 }
 
 export default renderTheCalendar;

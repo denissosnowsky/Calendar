@@ -271,7 +271,8 @@ const store = {
             members: []
         }
     ],
-    members: ["Dmitry", "Oleg", "Maria", "Natalia", "Artem", "Denis", "Inna"]
+    members: ["Dmitry", "Oleg", "Maria", "Natalia", "Artem", "Denis", "Inna"],
+    admins: ["Denis", "Inna"]
 };
 
 export function emptyTheVault(vault){
