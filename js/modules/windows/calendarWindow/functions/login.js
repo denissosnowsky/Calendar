@@ -67,14 +67,16 @@ function login(){
 
     confirmBtn.addEventListener('click', ()=>{
         let chosenName = listBtnTextSpan.innerHTML;
-        if(store.admins.indexOf(chosenName)!=-1){
-            logedUser = new Admin(chosenName);
-            logedUser.createEvent();
-        } else{
-            logedUser = new User(chosenName);
-            createBtn.style.opacity = '.5';
+        if(chosenName.length>0){
+            if(store.admins.indexOf(chosenName)!=-1){
+                logedUser = new Admin(chosenName);
+                logedUser.createEvent();
+            }else{
+                logedUser = new User(chosenName);
+                createBtn.style.opacity = '.5';
+            }
+            loginWindow.style.display = 'none';
         }
-        loginWindow.style.display = 'none';
     });
     
 }

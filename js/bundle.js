@@ -728,14 +728,16 @@ function login(){
 
     confirmBtn.addEventListener('click', ()=>{
         let chosenName = listBtnTextSpan.innerHTML;
-        if(_store_store__WEBPACK_IMPORTED_MODULE_0__.default.admins.indexOf(chosenName)!=-1){
-            logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.Admin(chosenName);
-            logedUser.createEvent();
-        } else{
-            logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.User(chosenName);
-            createBtn.style.opacity = '.5';
+        if(chosenName.length>0){
+            if(_store_store__WEBPACK_IMPORTED_MODULE_0__.default.admins.indexOf(chosenName)!=-1){
+                logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.Admin(chosenName);
+                logedUser.createEvent();
+            }else{
+                logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.User(chosenName);
+                createBtn.style.opacity = '.5';
+            }
+            loginWindow.style.display = 'none';
         }
-        loginWindow.style.display = 'none';
     });
     
 }
