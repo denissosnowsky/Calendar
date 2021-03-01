@@ -1,4 +1,4 @@
-import store from "../../../store/store";
+import { getData, fromStringToArray } from "../../../api";
 import { Admin, User } from "../../../store/userClasses";
 
 
@@ -33,50 +33,59 @@ function login(){
             this.parent.append(name);
         }
     }
-
-    store.members.forEach((item, i)=>{
-        new MemberList(item, memberList).render();
-        listItemsOfMembersInCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person');
-        nameInTheCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person')[0];
-        widthOfNameInTheCalendar = window.getComputedStyle(nameInTheCalendar).height;
-        widthOfNameInTheCalendarWithoutPX = widthOfNameInTheCalendar.replace(/\D/g, '');
-    });
-
-    if(memberList.querySelectorAll('div').length>3){
-        memberList.style.height = widthOfNameInTheCalendarWithoutPX*3 + "px";
-        memberList.style.overflow = "auto";
-    }
-
-    listBtn.addEventListener('click', ()=>{
-        memberList.classList.toggle('activeBlock');
-    });
     
-    loginWindow.addEventListener('click', (e)=>{
-        if(e.target && e.target!=listBtn && e.target!=listBtnText && e.target!=listBtnTextSpan && e.target!=listBtnArrow){
-            memberList.classList.remove('activeBlock');    
-        }
-        listItemsOfMembersInCalendar.forEach((el, i)=>{
-            if(e.target==el || e.target==el.querySelector('span')){
-                listBtnTextSpan.innerHTML=el.querySelector('span').innerHTML;
-            }
+    getData('members')
+        .then((json) => json[0].data)
+        .then((data)=>fromStringToArray(data))
+        .then(members=>{
+        members.forEach((item, i)=>{
+            new MemberList(item, memberList).render();
+            listItemsOfMembersInCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person');
+            nameInTheCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person')[0];
+            widthOfNameInTheCalendar = window.getComputedStyle(nameInTheCalendar).height;
+            widthOfNameInTheCalendarWithoutPX = widthOfNameInTheCalendar.replace(/\D/g, '');
         });
 
+        if(memberList.querySelectorAll('div').length>3){
+            memberList.style.height = widthOfNameInTheCalendarWithoutPX*3 + "px";
+            memberList.style.overflow = "auto";
+        }
+
+        listBtn.addEventListener('click', ()=>{
+            memberList.classList.toggle('activeBlock');
+        });
+        
+        loginWindow.addEventListener('click', (e)=>{
+            if(e.target && e.target!=listBtn && e.target!=listBtnText && e.target!=listBtnTextSpan && e.target!=listBtnArrow){
+                memberList.classList.remove('activeBlock');    
+            }
+            listItemsOfMembersInCalendar.forEach((el, i)=>{
+                if(e.target==el || e.target==el.querySelector('span')){
+                    listBtnTextSpan.innerHTML=el.querySelector('span').innerHTML;
+                }
+            });
+
+        });
     });
 
 
-
-    confirmBtn.addEventListener('click', ()=>{
-        let chosenName = listBtnTextSpan.innerHTML;
-        if(chosenName.length>0){
-            if(store.admins.indexOf(chosenName)!=-1){
-                logedUser = new Admin(chosenName);
-                logedUser.createEvent();
-            }else{
-                logedUser = new User(chosenName);
-                createBtn.style.opacity = '.5';
+    getData('admins')
+        .then((json) => json[0].data)
+        .then((data)=>fromStringToArray(data))
+        .then(admins=>{
+        confirmBtn.addEventListener('click', ()=>{
+            let chosenName = listBtnTextSpan.innerHTML;
+            if(chosenName.length>0){
+                if(admins.indexOf(chosenName)!=-1){
+                    logedUser = new Admin(chosenName);
+                    logedUser.createEvent();
+                }else{
+                    logedUser = new User(chosenName);
+                    createBtn.style.opacity = '.5';
+                }
+                loginWindow.style.display = 'none';
             }
-            loginWindow.style.display = 'none';
-        }
+        });
     });
     
 }

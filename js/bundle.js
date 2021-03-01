@@ -2,6 +2,67 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./js/modules/api.js":
+/*!***************************!*\
+  !*** ./js/modules/api.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "fromStringToArray": () => (/* binding */ fromStringToArray),
+/* harmony export */   "getData": () => (/* binding */ getData),
+/* harmony export */   "deleteData": () => (/* binding */ deleteData),
+/* harmony export */   "postData": () => (/* binding */ postData)
+/* harmony export */ });
+function fromStringToArray(string){
+    return string.replace(/\s/g, '_').replace(/\W/g, '').split('_');
+};
+
+const baseURL = 'http://158.101.166.74:8080/api/data/den_sos/';
+
+const getData = async (entity)=>{
+    const result =  await fetch(baseURL+entity);
+
+    if(!result.ok){
+        throw new Error(`Fetch failed, status: ${result.status}`);
+    }
+
+    return await result.json();
+};
+
+const deleteData = async (entity)=>{
+    const result =  await fetch(baseURL+entity, {
+        method: 'DELETE',
+    });
+
+    if(!result.ok){
+        throw new Error(`Fetch failed, status: ${result.status}`);
+    }
+};
+
+const postData = async (entity, member)=>{
+    const result =  await fetch(baseURL+entity, {
+        method: 'POST',
+        body: member,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      });
+
+    if(!result.ok){
+        throw new Error(`Fetch failed, status: ${result.status}`);
+    }
+};
+
+
+
+
+
+
+
+/***/ }),
+
 /***/ "./js/modules/store/store.js":
 /*!***********************************!*\
   !*** ./js/modules/store/store.js ***!
@@ -286,9 +347,7 @@ const store = {
             text: "",
             members: []
         }
-    ],
-    members: ["Dmitry", "Oleg", "Maria", "Natalia", "Artem", "Denis", "Inna"],
-    admins: ["Denis", "Inna"]
+    ]
 };
 
 function emptyTheVault(vault){
@@ -369,7 +428,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 /* harmony import */ var _functions_filterMembers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../functions/filterMembers */ "./js/modules/windows/calendarWindow/functions/filterMembers.js");
 /* harmony import */ var _localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../localCalendarStorage/localCalendarStorage */ "./js/modules/windows/calendarWindow/localCalendarStorage/localCalendarStorage.js");
 
@@ -406,97 +465,102 @@ function memberListButton(){
         }
     }
 
-    _store_store__WEBPACK_IMPORTED_MODULE_0__.default.members.forEach((item, i)=>{
-        new MemberList(item, memberList).render();
-        listItemsOfMembersInCalendar = document.querySelectorAll('.calendarWindow__wrapper-header-listInput-list-person');
-        
-        listItemsOfMembersInCalendar.forEach((item)=>{
-            if(item.querySelector('div')){
-                item.querySelector('div').style.backgroundColor = '#ddd';
-                item.setAttribute('data-checked',"");
-            }
+    (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('members')
+        .then((json) => json[0].data)
+        .then((data)=>(0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToArray)(data))
+        .then(members=>{
+        members.forEach((item, i)=>{
+            new MemberList(item, memberList).render();
+            listItemsOfMembersInCalendar = document.querySelectorAll('.calendarWindow__wrapper-header-listInput-list-person');
+            
+            listItemsOfMembersInCalendar.forEach((item)=>{
+                if(item.querySelector('div')){
+                    item.querySelector('div').style.backgroundColor = '#ddd';
+                    item.setAttribute('data-checked',"");
+                }
+            });
         });
-    });
 
-    if(memberList.querySelectorAll('div').length>3){
-        memberList.style.height = widthOfNameInTheCalendarWithoutPX*3 + "px";
-        memberList.style.overflow = "auto";
-    }
-
-
-    listBtn.addEventListener('click', ()=>{
-        memberList.classList.toggle('activeBlock');
-    });
-
-    calendarWindow.addEventListener('click', (e)=>{
-        if(e.target && e.target!=listBtn && e.target!=listBtnText && e.target!=listBtnTextSpan && e.target!=listBtnArrow && e.target!=memberList){
-            memberList.classList.remove('activeBlock');    
+        if(memberList.querySelectorAll('div').length>3){
+            memberList.style.height = widthOfNameInTheCalendarWithoutPX*3 + "px";
+            memberList.style.overflow = "auto";
         }
 
-        memberList.querySelectorAll('div').forEach((item, j)=>{
-            if(e.target==item || e.target==item.querySelector('span')){
-                memberList.classList.add('activeBlock');
-           }
+
+        listBtn.addEventListener('click', ()=>{
+            memberList.classList.toggle('activeBlock');
         });
 
-        if(memberList.classList.contains('activeBlock')){
-            let allInputs = memberList.querySelectorAll('.calendarWindow__wrapper-header-listInput-list-person-input');
-            let chosenInputs = memberList.querySelectorAll('[data-checked]');
+        calendarWindow.addEventListener('click', (e)=>{
+            if(e.target && e.target!=listBtn && e.target!=listBtnText && e.target!=listBtnTextSpan && e.target!=listBtnArrow && e.target!=memberList){
+                memberList.classList.remove('activeBlock');    
+            }
 
-            if(e.target==listItemsOfMembersInCalendar[0] || e.target==listItemsOfMembersInCalendar[0].firstElementChild){
-                allInputs = memberList.querySelectorAll('.calendarWindow__wrapper-header-listInput-list-person-input');
-                chosenInputs = memberList.querySelectorAll('[data-checked]');
-                
-                if(chosenInputs.length!=allInputs.length){
-                    (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.fillMembersStorage)(_store_store__WEBPACK_IMPORTED_MODULE_0__.default.members);
-                    listBtnTextSpan.innerHTML="All members";
-                    listItemsOfMembersInCalendar.forEach((item)=>{
-                        if(item.querySelector('div')){
-                            item.querySelector('div').style.backgroundColor = '#ddd';
-                            item.setAttribute('data-checked',"");
-                        }
-                    });
-                }else if(chosenInputs.length==allInputs.length){
-                    (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.emptyMembersStorage)();
-                    listBtnTextSpan.innerHTML="";
-                    listItemsOfMembersInCalendar.forEach((item)=>{
-                        if(item.querySelector('div')){
-                            item.querySelector('div').style.backgroundColor = "";
-                            item.removeAttribute('data-checked');
-                        }
-                    });
-                }
-            }else{
-                listItemsOfMembersInCalendar.forEach((item, j)=>{
-                    if(e.target==item || e.target==item.firstElementChild || e.target==item.lastElementChild){
-                        if(item.getAttribute('data-checked')==null){
-                            item.lastElementChild.style.backgroundColor = '#ddd';
-                            item.setAttribute('data-checked',"");
-                        }else {
-                            item.lastElementChild.style.backgroundColor = "";
-                            item.removeAttribute('data-checked');
-                        }
+            memberList.querySelectorAll('div').forEach((item, j)=>{
+                if(e.target==item || e.target==item.querySelector('span')){
+                    memberList.classList.add('activeBlock');
+            }
+            });
 
-                        (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.emptyMembersStorage)();
-                        chosenInputs = memberList.querySelectorAll('[data-checked]');
-                        chosenInputs.forEach(item=>{
-                            (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.pushMembersStorage)(item.firstElementChild.innerHTML);
+            if(memberList.classList.contains('activeBlock')){
+                let allInputs = memberList.querySelectorAll('.calendarWindow__wrapper-header-listInput-list-person-input');
+                let chosenInputs = memberList.querySelectorAll('[data-checked]');
+
+                if(e.target==listItemsOfMembersInCalendar[0] || e.target==listItemsOfMembersInCalendar[0].firstElementChild){
+                    allInputs = memberList.querySelectorAll('.calendarWindow__wrapper-header-listInput-list-person-input');
+                    chosenInputs = memberList.querySelectorAll('[data-checked]');
+                    
+                    if(chosenInputs.length!=allInputs.length){
+                        (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.fillMembersStorage)(members);
+                        listBtnTextSpan.innerHTML="All members";
+                        listItemsOfMembersInCalendar.forEach((item)=>{
+                            if(item.querySelector('div')){
+                                item.querySelector('div').style.backgroundColor = '#ddd';
+                                item.setAttribute('data-checked',"");
+                            }
                         });
-        
-                        if(_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.localCalendarStorage.membersStorage.length==allInputs.length){
-                            listBtnTextSpan.innerHTML="All members";
-                        }else{
-                            listBtnTextSpan.innerHTML=_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.localCalendarStorage.membersStorage.join(', ');
-                            if(listBtnTextSpan.innerHTML.length>20){
-                                listBtnTextSpan.innerHTML=listBtnTextSpan.innerHTML.slice(0, 17)+"...";
+                    }else if(chosenInputs.length==allInputs.length){
+                        (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.emptyMembersStorage)();
+                        listBtnTextSpan.innerHTML="";
+                        listItemsOfMembersInCalendar.forEach((item)=>{
+                            if(item.querySelector('div')){
+                                item.querySelector('div').style.backgroundColor = "";
+                                item.removeAttribute('data-checked');
+                            }
+                        });
+                    }
+                }else{
+                    listItemsOfMembersInCalendar.forEach((item, j)=>{
+                        if(e.target==item || e.target==item.firstElementChild || e.target==item.lastElementChild){
+                            if(item.getAttribute('data-checked')==null){
+                                item.lastElementChild.style.backgroundColor = '#ddd';
+                                item.setAttribute('data-checked',"");
+                            }else {
+                                item.lastElementChild.style.backgroundColor = "";
+                                item.removeAttribute('data-checked');
+                            }
+
+                            (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.emptyMembersStorage)();
+                            chosenInputs = memberList.querySelectorAll('[data-checked]');
+                            chosenInputs.forEach(item=>{
+                                (0,_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.pushMembersStorage)(item.firstElementChild.innerHTML);
+                            });
+            
+                            if(_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.localCalendarStorage.membersStorage.length==allInputs.length){
+                                listBtnTextSpan.innerHTML="All members";
+                            }else{
+                                listBtnTextSpan.innerHTML=_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_2__.localCalendarStorage.membersStorage.join(', ');
+                                if(listBtnTextSpan.innerHTML.length>20){
+                                    listBtnTextSpan.innerHTML=listBtnTextSpan.innerHTML.slice(0, 17)+"...";
+                                }
                             }
                         }
-                    }
-                });
+                    });
 
-            }
-            (0,_functions_filterMembers__WEBPACK_IMPORTED_MODULE_1__.default)();
-        };
+                }
+                (0,_functions_filterMembers__WEBPACK_IMPORTED_MODULE_1__.default)();
+            };
+        });
     });
 }
 
@@ -657,7 +721,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "logedUser": () => (/* binding */ logedUser)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 /* harmony import */ var _store_userClasses__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../store/userClasses */ "./js/modules/store/userClasses.js");
 
 
@@ -694,50 +758,59 @@ function login(){
             this.parent.append(name);
         }
     }
-
-    _store_store__WEBPACK_IMPORTED_MODULE_0__.default.members.forEach((item, i)=>{
-        new MemberList(item, memberList).render();
-        listItemsOfMembersInCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person');
-        nameInTheCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person')[0];
-        widthOfNameInTheCalendar = window.getComputedStyle(nameInTheCalendar).height;
-        widthOfNameInTheCalendarWithoutPX = widthOfNameInTheCalendar.replace(/\D/g, '');
-    });
-
-    if(memberList.querySelectorAll('div').length>3){
-        memberList.style.height = widthOfNameInTheCalendarWithoutPX*3 + "px";
-        memberList.style.overflow = "auto";
-    }
-
-    listBtn.addEventListener('click', ()=>{
-        memberList.classList.toggle('activeBlock');
-    });
     
-    loginWindow.addEventListener('click', (e)=>{
-        if(e.target && e.target!=listBtn && e.target!=listBtnText && e.target!=listBtnTextSpan && e.target!=listBtnArrow){
-            memberList.classList.remove('activeBlock');    
-        }
-        listItemsOfMembersInCalendar.forEach((el, i)=>{
-            if(e.target==el || e.target==el.querySelector('span')){
-                listBtnTextSpan.innerHTML=el.querySelector('span').innerHTML;
-            }
+    (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('members')
+        .then((json) => json[0].data)
+        .then((data)=>(0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToArray)(data))
+        .then(members=>{
+        members.forEach((item, i)=>{
+            new MemberList(item, memberList).render();
+            listItemsOfMembersInCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person');
+            nameInTheCalendar = document.querySelectorAll('.loginWindow__window-selection-listInput-list-person')[0];
+            widthOfNameInTheCalendar = window.getComputedStyle(nameInTheCalendar).height;
+            widthOfNameInTheCalendarWithoutPX = widthOfNameInTheCalendar.replace(/\D/g, '');
         });
 
+        if(memberList.querySelectorAll('div').length>3){
+            memberList.style.height = widthOfNameInTheCalendarWithoutPX*3 + "px";
+            memberList.style.overflow = "auto";
+        }
+
+        listBtn.addEventListener('click', ()=>{
+            memberList.classList.toggle('activeBlock');
+        });
+        
+        loginWindow.addEventListener('click', (e)=>{
+            if(e.target && e.target!=listBtn && e.target!=listBtnText && e.target!=listBtnTextSpan && e.target!=listBtnArrow){
+                memberList.classList.remove('activeBlock');    
+            }
+            listItemsOfMembersInCalendar.forEach((el, i)=>{
+                if(e.target==el || e.target==el.querySelector('span')){
+                    listBtnTextSpan.innerHTML=el.querySelector('span').innerHTML;
+                }
+            });
+
+        });
     });
 
 
-
-    confirmBtn.addEventListener('click', ()=>{
-        let chosenName = listBtnTextSpan.innerHTML;
-        if(chosenName.length>0){
-            if(_store_store__WEBPACK_IMPORTED_MODULE_0__.default.admins.indexOf(chosenName)!=-1){
-                logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.Admin(chosenName);
-                logedUser.createEvent();
-            }else{
-                logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.User(chosenName);
-                createBtn.style.opacity = '.5';
+    (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('admins')
+        .then((json) => json[0].data)
+        .then((data)=>(0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToArray)(data))
+        .then(admins=>{
+        confirmBtn.addEventListener('click', ()=>{
+            let chosenName = listBtnTextSpan.innerHTML;
+            if(chosenName.length>0){
+                if(admins.indexOf(chosenName)!=-1){
+                    logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.Admin(chosenName);
+                    logedUser.createEvent();
+                }else{
+                    logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.User(chosenName);
+                    createBtn.style.opacity = '.5';
+                }
+                loginWindow.style.display = 'none';
             }
-            loginWindow.style.display = 'none';
-        }
+        });
     });
     
 }
@@ -946,12 +1019,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "emptyMembersStorage": () => (/* binding */ emptyMembersStorage),
 /* harmony export */   "pushMembersStorage": () => (/* binding */ pushMembersStorage)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 
 
 const localCalendarStorage = {
-    membersStorage: [..._store_store__WEBPACK_IMPORTED_MODULE_0__.default.members]
+    membersStorage: []
 }
+
+;(0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('members')
+    .then((json) => json[0].data)
+    .then((data)=>(0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToArray)(data))
+    .then((members)=>{
+        localCalendarStorage.membersStorage=[...members];
+    });
+
+
 
 function fillMembersStorage(members){
     localCalendarStorage.membersStorage = [...members];
@@ -1086,7 +1168,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 /* harmony import */ var _localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../localCreatorStorage/localCreatorStorage */ "./js/modules/windows/createWindow/localCreatorStorage/localCreatorStorage.js");
 
 
@@ -1123,97 +1205,102 @@ function listButtons(){
         }
     }
 
-    _store_store__WEBPACK_IMPORTED_MODULE_0__.default.members.forEach((item, i)=>{
-        new MemberListInCreator(item, memberListWrapperInCreator, item).render();
-        listItemsOfMembers = document.querySelectorAll('#members .creatorWindow__wrapper-creation-button-list-person');
-    });    
+    (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('members')
+        .then((json) => json[0].data)
+        .then((data)=>(0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToArray)(data))
+        .then(members=>{
+        members.forEach((item, i)=>{
+            new MemberListInCreator(item, memberListWrapperInCreator, item).render();
+            listItemsOfMembers = document.querySelectorAll('#members .creatorWindow__wrapper-creation-button-list-person');
+        });    
 
-    listBlocks.forEach((item, i)=>{
-        if(item.querySelectorAll("div").length > 3){
-            item.style.height = widthOfItemWithoutPX*3 + "px";
-            item.style.overflow = "auto";
-        } 
-    });
-
-    listBtnsInCreator.forEach((item, i)=>{
-        item.addEventListener('click', ()=>{
-            listBlocks[i].classList.toggle('activeBlock');
+        listBlocks.forEach((item, i)=>{
+            if(item.querySelectorAll("div").length > 3){
+                item.style.height = widthOfItemWithoutPX*3 + "px";
+                item.style.overflow = "auto";
+            } 
         });
-    });
 
-    creatorWindow.addEventListener('click', (e)=>{
         listBtnsInCreator.forEach((item, i)=>{
-            if(listBlocks[i].classList.contains('activeBlock')){
-                if(e.target && e.target!=listBtnsInCreator[i] && e.target!=listBtnTextInCreator[i] && e.target!=listBtnTextSpanInCreator[i] && e.target!=listBtnArrowInCreator[i] && e.target!=listBlocks[i]){
-                    listBlocks[i].classList.remove('activeBlock');
-                }
-            }
+            item.addEventListener('click', ()=>{
+                listBlocks[i].classList.toggle('activeBlock');
+            });
         });
 
-        listBlocks[0].querySelectorAll('div').forEach((item, j)=>{
-            if(e.target==item || e.target==item.querySelector('span')){
-                listBlocks[0].classList.add('activeBlock');
-           }
-        });
-
-        if(listBlocks[0].classList.contains('activeBlock')){
-            let allInputs = listBlocks[0].querySelectorAll('.creatorWindow__wrapper-creation-button-list-person-input');
-            let chosenInputs = listBlocks[0].querySelectorAll('[data-checked]');
-
-            if(e.target==listItemsOfMembers[0] || e.target==listItemsOfMembers[0].firstElementChild){
-                allInputs = listBlocks[0].querySelectorAll('.creatorWindow__wrapper-creation-button-list-person-input');
-                chosenInputs = listBlocks[0].querySelectorAll('[data-checked]');
-
-                if(chosenInputs.length!=allInputs.length){
-                (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.fillMembersStorage)(_store_store__WEBPACK_IMPORTED_MODULE_0__.default.members);
-                    listBtnTextSpanInCreator[0].innerHTML="All members";
-                    listItemsOfMembers.forEach((item)=>{
-                        if(item.querySelector('div')){
-                            item.querySelector('div').style.backgroundColor = '#ddd';
-                            item.setAttribute('data-checked',"");
-                        }
-                    });
-                }else if(chosenInputs.length==allInputs.length){
-                    (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.emptyMembersStorage)();
-                    listBtnTextSpanInCreator[0].innerHTML="";
-                    listItemsOfMembers.forEach((item)=>{
-                        if(item.querySelector('div')){
-                            item.querySelector('div').style.backgroundColor = "";
-                            item.removeAttribute('data-checked');
-                        }
-                    });
-                }
-            }else{
-                listItemsOfMembers.forEach((item, j)=>{
-                    if(e.target==item || e.target==item.firstElementChild || e.target==item.lastElementChild){
-                        if(item.getAttribute('data-checked')==null){
-                            item.lastElementChild.style.backgroundColor = '#ddd';
-                            item.setAttribute('data-checked',"");
-                        }else {
-                            item.lastElementChild.style.backgroundColor = "";
-                            item.removeAttribute('data-checked');
-                        }
+        creatorWindow.addEventListener('click', (e)=>{
+            listBtnsInCreator.forEach((item, i)=>{
+                if(listBlocks[i].classList.contains('activeBlock')){
+                    if(e.target && e.target!=listBtnsInCreator[i] && e.target!=listBtnTextInCreator[i] && e.target!=listBtnTextSpanInCreator[i] && e.target!=listBtnArrowInCreator[i] && e.target!=listBlocks[i]){
+                        listBlocks[i].classList.remove('activeBlock');
                     }
-                });
+                }
+            });
 
-                (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.emptyMembersStorage)();
+            listBlocks[0].querySelectorAll('div').forEach((item, j)=>{
+                if(e.target==item || e.target==item.querySelector('span')){
+                    listBlocks[0].classList.add('activeBlock');
+            }
+            });
 
-                chosenInputs = listBlocks[0].querySelectorAll('[data-checked]');
-                chosenInputs.forEach(item=>{
-                    (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.pushMembersStorage)(item.firstElementChild.innerHTML);
-                });
+            if(listBlocks[0].classList.contains('activeBlock')){
+                let allInputs = listBlocks[0].querySelectorAll('.creatorWindow__wrapper-creation-button-list-person-input');
+                let chosenInputs = listBlocks[0].querySelectorAll('[data-checked]');
 
-                if(_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.localCreatorStorage.membersStorage.length==allInputs.length){
-                    listBtnTextSpanInCreator[0].innerHTML="All members";
+                if(e.target==listItemsOfMembers[0] || e.target==listItemsOfMembers[0].firstElementChild){
+                    allInputs = listBlocks[0].querySelectorAll('.creatorWindow__wrapper-creation-button-list-person-input');
+                    chosenInputs = listBlocks[0].querySelectorAll('[data-checked]');
+
+                    if(chosenInputs.length!=allInputs.length){
+                    (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.fillMembersStorage)(members);
+                        listBtnTextSpanInCreator[0].innerHTML="All members";
+                        listItemsOfMembers.forEach((item)=>{
+                            if(item.querySelector('div')){
+                                item.querySelector('div').style.backgroundColor = '#ddd';
+                                item.setAttribute('data-checked',"");
+                            }
+                        });
+                    }else if(chosenInputs.length==allInputs.length){
+                        (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.emptyMembersStorage)();
+                        listBtnTextSpanInCreator[0].innerHTML="";
+                        listItemsOfMembers.forEach((item)=>{
+                            if(item.querySelector('div')){
+                                item.querySelector('div').style.backgroundColor = "";
+                                item.removeAttribute('data-checked');
+                            }
+                        });
+                    }
                 }else{
-                    listBtnTextSpanInCreator[0].innerHTML=_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.localCreatorStorage.membersStorage.join(', ');
-                    if(listBtnTextSpanInCreator[0].innerHTML.length>20){
-                        listBtnTextSpanInCreator[0].innerHTML=listBtnTextSpanInCreator[0].innerHTML.slice(0, 17)+"...";
-                    }
-                }
+                    listItemsOfMembers.forEach((item, j)=>{
+                        if(e.target==item || e.target==item.firstElementChild || e.target==item.lastElementChild){
+                            if(item.getAttribute('data-checked')==null){
+                                item.lastElementChild.style.backgroundColor = '#ddd';
+                                item.setAttribute('data-checked',"");
+                            }else {
+                                item.lastElementChild.style.backgroundColor = "";
+                                item.removeAttribute('data-checked');
+                            }
+                        }
+                    });
 
+                    (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.emptyMembersStorage)();
+
+                    chosenInputs = listBlocks[0].querySelectorAll('[data-checked]');
+                    chosenInputs.forEach(item=>{
+                        (0,_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.pushMembersStorage)(item.firstElementChild.innerHTML);
+                    });
+
+                    if(_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.localCreatorStorage.membersStorage.length==allInputs.length){
+                        listBtnTextSpanInCreator[0].innerHTML="All members";
+                    }else{
+                        listBtnTextSpanInCreator[0].innerHTML=_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_1__.localCreatorStorage.membersStorage.join(', ');
+                        if(listBtnTextSpanInCreator[0].innerHTML.length>20){
+                            listBtnTextSpanInCreator[0].innerHTML=listBtnTextSpanInCreator[0].innerHTML.slice(0, 17)+"...";
+                        }
+                    }
+
+                }
             }
-        }
+        });
     });
 
 
