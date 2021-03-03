@@ -1,4 +1,4 @@
-import store, { fillTheVault } from "../../../store/store";
+import { fromStringToObject, getData, putData } from "../../../api";
 import renderTheCalendar from "../../calendarWindow/functions/renderTheCalendar";
 import clearTheForm from "../functions/clearTheForm";
 import openErrorWindow from "../functions/openErrorWindow";
@@ -20,18 +20,28 @@ function createButton(){
             openErrorWindow("time");
         }else{
             chosenSlotId = localCreatorStorage.chosenSlotStorage[0]+localCreatorStorage.chosenSlotStorage[1];
-    
-            store.state.forEach((item, i)=>{
-                if(item.id==chosenSlotId){
-                    if(item.isOrdered==true){
-                        openErrorWindow("slot");
-                    }else{
-                        fillTheVault(item, nameOfTheEvent.value, localCreatorStorage.membersStorage);
-                        clearTheForm();
-                        renderTheCalendar();
+            
+            getData('events')
+            .then(events=>{
+                events.forEach(obj=>{
+                    let newObj = fromStringToObject(obj.data);
+                    if(newObj.id==chosenSlotId){
+                        if(newObj.isOrdered==true){
+                            openErrorWindow("slot");
+                        }else{
+                            let eId = obj.id;
+                            let newPh = localCreatorStorage.membersStorage.join("','");
+                            let filledObj = JSON.stringify({data:`{id:${newObj.id},isOrdered:true,text:'${nameOfTheEvent.value}',members:['${newPh}']}`,id:"string"});
+                            putData(`events/${eId}`, filledObj)
+                                .then(()=>{
+                                    renderTheCalendar();
+                                    clearTheForm();
+                                });
+                        }
                     }
-                }
+                });
             });
+
         }
     });
 }

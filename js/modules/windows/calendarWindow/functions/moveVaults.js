@@ -1,4 +1,4 @@
-import { emptyTheVault, fillTheVault } from "../../../store/store";
+import { fromStringToObject, getData, putData } from "../../../api";
 import renderTheCalendar from "./renderTheCalendar";
 
 function moveVaults(){
@@ -46,24 +46,39 @@ function moveVaults(){
                             let rightMeasure = eachEvent.getBoundingClientRect().right;  
 
                             if(event.pageX>leftMeasure && event.pageX<rightMeasure && event.pageY>topMeasure && event.pageY<bottomMeasure){
-                                store.state.forEach((chosenEvent)=>{
-                                    if(chosenEvent.id==eachEvent.getAttribute('id')){
-                                        store.state.forEach((deleteEvent)=>{
-                                            if(deleteEvent.id==vaultsForMoving[i].getAttribute('id')){
-                                                if(chosenEvent.isOrdered){
-                                                    return;
-                                                }else{
-                                                    fillTheVault(chosenEvent, deleteEvent.text, deleteEvent.members);
-                                                    emptyTheVault(deleteEvent);
+                                getData('events')
+                                .then(events=>{
+                                    events.forEach(obj=>{
+                                        let newObj = fromStringToObject(obj.data);
+                                        if(newObj.id==eachEvent.getAttribute('id')){
+                                            events.forEach(obj2=>{
+                                                let newObjDel = fromStringToObject(obj2.data);
+                                                if(newObjDel.id==vaultsForMoving[i].getAttribute('id')){
+                                                    if(newObj.isOrdered){
+                                                        return;
+                                                    }else{
+                                                        let eId = obj2.id;
+                                                        let emptyObj = JSON.stringify({data:`{id:${newObjDel.id},isOrdered:false,text:'',members:[]}`,id:"string"});
+                                                        putData(`events/${eId}`, emptyObj)
+                                                        .then(()=>{
+                                                            let eIdN = obj.id;
+                                                            let newPh = newObjDel.members.join("','");
+                                                            let filledObj = JSON.stringify({data:`{id:${newObj.id},isOrdered:true,text:'${newObjDel.text}',members:['${newPh}']}`,id:"string"});
+                                                            putData(`events/${eIdN}`, filledObj)
+                                                            .then(()=>{
+                                                                element.remove();
+                                                                renderTheCalendar();
+                                                                moveVaults();
+                                                            });
+                                                        });
+                                                    }
                                                 }
-                                            }
-                                        });
-                                    }
+                                            });   
+                                        }    
+                                    });
                                 });
                             }
                         });
-                        element.remove();
-                        renderTheCalendar();
                     }, {once: true});
                 }
 

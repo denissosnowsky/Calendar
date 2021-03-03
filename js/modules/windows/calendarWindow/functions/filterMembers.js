@@ -1,4 +1,4 @@
-import store from "../../../store/store";
+import { fromStringToObject, getData } from "../../../api";
 import { localCalendarStorage } from "../localCalendarStorage/localCalendarStorage";
 
 function filterMembers(){
@@ -8,10 +8,14 @@ function filterMembers(){
     vaultsHolders.forEach((item)=>{
         item.querySelector('.calendarWindow__wrapper-content-vaults-order-appeared').style.display="none";
     });
-    store.state.forEach((vault, j)=>{
-        if(localCalendarStorage.membersStorage.some(name=>vault.members.indexOf(name)!=-1)){
-            calendarWindow.querySelector(`[id="${vault.id}"]`).querySelector('.calendarWindow__wrapper-content-vaults-order-appeared').style.display="grid";
-        }
+    getData('events')
+    .then(events=>{
+        events.forEach(obj=>{
+            let newObj = fromStringToObject(obj.data);
+            if(localCalendarStorage.membersStorage.some(name=>newObj.members.indexOf(name)!=-1)){
+                calendarWindow.querySelector(`[id="${newObj.id}"]`).querySelector('.calendarWindow__wrapper-content-vaults-order-appeared').style.display="grid";
+            }
+        })
     });
 }
 

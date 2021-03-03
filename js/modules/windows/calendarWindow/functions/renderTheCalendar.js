@@ -1,8 +1,6 @@
-import store from "../../../store/store";
-//import deleteEvent from "./deleteEvent";
+import { fromStringToObject, getData } from "../../../api";
+import { logedUser } from "../calendarWindow";
 import filterMembers from "./filterMembers";
-import { logedUser } from "./login";
-//import moveVaults from "./moveVaults";
 import Vaults from "./vaultsClass";
 
 function renderTheCalendar(){
@@ -14,23 +12,23 @@ function renderTheCalendar(){
         item.remove();
     })
 
-    store.state.forEach((item, i)=>{
-        if(item.isOrdered){
-            display = "grid";
-        } else {
-            display = "none";
+    getData('events')
+    .then(events=>{
+        events.forEach(obj=>{
+            let newObj = fromStringToObject(obj.data);
+            if(newObj.isOrdered){
+                display = "grid";
+            } else {
+                display = "none";
+            }
+            new Vaults(vaultsWrapper, newObj.text, newObj.isOrdered, display, newObj.id).render();
+        });
+        filterMembers();
+        if(logedUser){
+            logedUser.deleteTheEvent();
+            logedUser.moveTheEvent();
         }
-        new Vaults(vaultsWrapper, item.text, item.isOrdered, display, item.id).render();
     });
-    //moveVaults();
-    filterMembers();
-    //deleteEvent();
-    if(logedUser){
-        logedUser.moveTheEvent();
-    }
-    if(logedUser){
-        logedUser.deleteTheEvent();
-    }
     
 }
 

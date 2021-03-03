@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./js/modules/api.js":
@@ -8,16 +7,24 @@
   \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "fromStringToArray": () => (/* binding */ fromStringToArray),
+/* harmony export */   "fromStringToObject": () => (/* binding */ fromStringToObject),
 /* harmony export */   "getData": () => (/* binding */ getData),
 /* harmony export */   "deleteData": () => (/* binding */ deleteData),
-/* harmony export */   "postData": () => (/* binding */ postData)
+/* harmony export */   "postData": () => (/* binding */ postData),
+/* harmony export */   "putData": () => (/* binding */ putData)
 /* harmony export */ });
 function fromStringToArray(string){
     return string.replace(/\s/g, '_').replace(/\W/g, '').split('_');
 };
+
+function fromStringToObject(str){
+    return JSON.parse(str.replace(/id/g, '"id"').replace(/isOrdered/g, '"isOrdered"').replace(/text/g, '"text"').replace(/members/g, '"members"').replace(/'/g, '"'));
+}
+
 
 const baseURL = 'http://158.101.166.74:8080/api/data/den_sos/';
 
@@ -41,9 +48,26 @@ const deleteData = async (entity)=>{
     }
 };
 
+
 const postData = async (entity, member)=>{
     const result =  await fetch(baseURL+entity, {
         method: 'POST',
+        body: member,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      });
+
+    if(!result.ok){
+        throw new Error(`Fetch failed, status: ${result.status}`);
+    }
+};
+
+
+const putData = async (entity, member)=>{
+      
+    const result =  await fetch(baseURL+entity, {
+        method: 'PUT',
         body: member,
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -67,302 +91,9 @@ const postData = async (entity, member)=>{
 /*!***********************************!*\
   !*** ./js/modules/store/store.js ***!
   \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "emptyTheVault": () => (/* binding */ emptyTheVault),
-/* harmony export */   "fillTheVault": () => (/* binding */ fillTheVault),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-const store = {
-    state: [
-        {
-            id: 11,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 12,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 13,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 14,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 15,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 21,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 22,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 23,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 24,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 25,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 31,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 32,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 33,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 34,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 35,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 41,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 42,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 43,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 44,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 45,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 51,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 52,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 53,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 54,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 55,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 61,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 62,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 63,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 64,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 65,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 71,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 72,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 73,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 74,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 75,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 81,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 82,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 83,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 84,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 85,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 91,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 92,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 93,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 94,
-            isOrdered: false,
-            text: "",
-            members: []
-        },
-        {
-            id: 95,
-            isOrdered: false,
-            text: "",
-            members: []
-        }
-    ]
-};
 
-function emptyTheVault(vault){
-    vault.isOrdered=false;
-    vault.text="";
-    vault.members=[];
-}
-
-function fillTheVault(vault, text, members){
-    vault.isOrdered = true;
-    vault.text = text;
-    vault.members = [...members];
-}
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
 
 /***/ }),
 
@@ -372,6 +103,7 @@ function fillTheVault(vault, text, members){
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "User": () => (/* binding */ User),
@@ -424,6 +156,7 @@ class Admin extends User{
   \***********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -574,6 +307,7 @@ function memberListButton(){
   \*********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -599,27 +333,55 @@ function newEventButton(){
   \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "logedUser": () => (/* binding */ logedUser)
 /* harmony export */ });
 /* harmony import */ var _buttons_memberListButton__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./buttons/memberListButton */ "./js/modules/windows/calendarWindow/buttons/memberListButton.js");
 /* harmony import */ var _functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./functions/renderTheCalendar */ "./js/modules/windows/calendarWindow/functions/renderTheCalendar.js");
 /* harmony import */ var _functions_login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./functions/login */ "./js/modules/windows/calendarWindow/functions/login.js");
-
-//import newEventButton from "./buttons/newEventButton";
-
-
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api */ "./js/modules/api.js");
+/* harmony import */ var _store_userClasses__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../store/userClasses */ "./js/modules/store/userClasses.js");
 
 
+
+
+
+
+let logedUser;
 function calendarComponent(){
-    (0,_functions_login__WEBPACK_IMPORTED_MODULE_2__.default)();
-    (0,_functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
-    (0,_buttons_memberListButton__WEBPACK_IMPORTED_MODULE_0__.default)();
-    //newEventButton();
+        (0,_functions_login__WEBPACK_IMPORTED_MODULE_2__.login)();
+        (0,_api__WEBPACK_IMPORTED_MODULE_3__.getData)('admins')
+            .then((json) => json[0].data)
+            .then((data)=>(0,_api__WEBPACK_IMPORTED_MODULE_3__.fromStringToArray)(data))
+            .then(admins=>{
+                const confirmBtn = document.querySelector('.loginWindow__window-answers-confirm'),
+                    createBtn = document.querySelector('.calendarWindow__wrapper-header-addButton-button'),
+                    loginWindow = document.querySelector('.loginWindow'),
+                    listBtnTextSpan = document.querySelector('.loginWindow__window-selection-listInput-button-text span');
+                    confirmBtn.addEventListener('click', ()=>{
+                        let chosenName = listBtnTextSpan.innerHTML;
+                        if(chosenName.length>0){
+                            if(admins.indexOf(chosenName)!=-1){
+                                logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_4__.Admin(chosenName);
+                                logedUser.createEvent();
+                            }else{
+                                logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_4__.User(chosenName);
+                                createBtn.style.opacity = '.5';
+                            }
+                            loginWindow.style.display = 'none';
+                            (0,_functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
+                            (0,_buttons_memberListButton__WEBPACK_IMPORTED_MODULE_0__.default)();
+                        }
+                    });
+            });
+
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (calendarComponent);
+
 
 /***/ }),
 
@@ -629,11 +391,12 @@ function calendarComponent(){
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 /* harmony import */ var _renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./renderTheCalendar */ "./js/modules/windows/calendarWindow/functions/renderTheCalendar.js");
 
 
@@ -648,27 +411,37 @@ function deleteEvent(){
         vaultsHoldersForClosing = document.querySelectorAll('.calendarWindow__wrapper-content-vaults-order');
 
     deleteButtons.forEach((btn, i)=>{
+        
         btn.addEventListener('click', (e)=>{
             let nameOfEvent;
-            store.state.forEach(vault=>{
-                if(vault.id==vaultsHoldersForClosing[i].getAttribute('id')){
-                    nameOfEvent=vault.text;
-                }
-            });
-            eventNameInTheDeleteWindow.innerHTML = `"${nameOfEvent}"`;
-            deleteWindow.style.display="block";
-            noAnswer.addEventListener('click', ()=>{
-                deleteWindow.style.display="none";
-            });
-            yesAnswer.addEventListener('click', ()=>{
-                store.state.forEach((deletedItem, j)=>{
-                    if(deletedItem.id==vaultsHoldersForClosing[i].getAttribute("id")){
-                        (0,_store_store__WEBPACK_IMPORTED_MODULE_0__.emptyTheVault)(deletedItem);
-                        (0,_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
+            (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('events')
+            .then(events=>{
+                events.forEach(obj=>{
+                    let newObj = (0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToObject)(obj.data);
+                    if(newObj.id==vaultsHoldersForClosing[i].getAttribute('id')){
+                        nameOfEvent=newObj.text;
                     }
+                })
+                eventNameInTheDeleteWindow.innerHTML = `"${nameOfEvent}"`;
+                deleteWindow.style.display="block";
+                noAnswer.addEventListener('click', ()=>{
+                    deleteWindow.style.display="none";
                 });
-                deleteWindow.style.display="none";
-            }, {once: true});
+                yesAnswer.addEventListener('click', ()=>{
+                    events.forEach(obj=>{
+                        let newObj = (0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToObject)(obj.data);
+                        if(newObj.id==vaultsHoldersForClosing[i].getAttribute("id")){
+                            let eId = obj.id;
+                            let emptyObj = JSON.stringify({data:`{id:${newObj.id},isOrdered:false,text:'',members:[]}`,id:"string"});
+                            (0,_api__WEBPACK_IMPORTED_MODULE_0__.putData)(`events/${eId}`, emptyObj)
+                                .then(()=>{
+                                    (0,_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
+                                });
+                        }
+                    });
+                    deleteWindow.style.display="none";
+                }, {once: true});
+            });
         });
     });
 }
@@ -683,11 +456,12 @@ function deleteEvent(){
   \**********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 /* harmony import */ var _localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../localCalendarStorage/localCalendarStorage */ "./js/modules/windows/calendarWindow/localCalendarStorage/localCalendarStorage.js");
 
 
@@ -699,10 +473,14 @@ function filterMembers(){
     vaultsHolders.forEach((item)=>{
         item.querySelector('.calendarWindow__wrapper-content-vaults-order-appeared').style.display="none";
     });
-    _store_store__WEBPACK_IMPORTED_MODULE_0__.default.state.forEach((vault, j)=>{
-        if(_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_1__.localCalendarStorage.membersStorage.some(name=>vault.members.indexOf(name)!=-1)){
-            calendarWindow.querySelector(`[id="${vault.id}"]`).querySelector('.calendarWindow__wrapper-content-vaults-order-appeared').style.display="grid";
-        }
+    (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('events')
+    .then(events=>{
+        events.forEach(obj=>{
+            let newObj = (0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToObject)(obj.data);
+            if(_localCalendarStorage_localCalendarStorage__WEBPACK_IMPORTED_MODULE_1__.localCalendarStorage.membersStorage.some(name=>newObj.members.indexOf(name)!=-1)){
+                calendarWindow.querySelector(`[id="${newObj.id}"]`).querySelector('.calendarWindow__wrapper-content-vaults-order-appeared').style.display="grid";
+            }
+        })
     });
 }
 
@@ -716,18 +494,14 @@ function filterMembers(){
   \**************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "logedUser": () => (/* binding */ logedUser)
+/* harmony export */   "login": () => (/* binding */ login)
 /* harmony export */ });
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
-/* harmony import */ var _store_userClasses__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../store/userClasses */ "./js/modules/store/userClasses.js");
 
 
-
-
-let logedUser;
 
 function login(){
     const memberList = document.querySelector('.loginWindow__window-selection-listInput-list'),
@@ -735,9 +509,7 @@ function login(){
         loginWindow = document.querySelector('.loginWindow'),
         listBtnText = document.querySelector('.loginWindow__window-selection-listInput-button-text'),
         listBtnTextSpan = document.querySelector('.loginWindow__window-selection-listInput-button-text span'),
-        listBtnArrow = document.querySelector('.loginWindow__window-selection-listInput-button-arrow'),
-        confirmBtn = document.querySelector('.loginWindow__window-answers-confirm'),
-        createBtn = document.querySelector('.calendarWindow__wrapper-header-addButton-button');
+        listBtnArrow = document.querySelector('.loginWindow__window-selection-listInput-button-arrow');
     let listItemsOfMembersInCalendar,
         nameInTheCalendar,
         widthOfNameInTheCalendar,
@@ -789,34 +561,9 @@ function login(){
                     listBtnTextSpan.innerHTML=el.querySelector('span').innerHTML;
                 }
             });
-
         });
     });
-
-
-    (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('admins')
-        .then((json) => json[0].data)
-        .then((data)=>(0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToArray)(data))
-        .then(admins=>{
-        confirmBtn.addEventListener('click', ()=>{
-            let chosenName = listBtnTextSpan.innerHTML;
-            if(chosenName.length>0){
-                if(admins.indexOf(chosenName)!=-1){
-                    logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.Admin(chosenName);
-                    logedUser.createEvent();
-                }else{
-                    logedUser = new _store_userClasses__WEBPACK_IMPORTED_MODULE_1__.User(chosenName);
-                    createBtn.style.opacity = '.5';
-                }
-                loginWindow.style.display = 'none';
-            }
-        });
-    });
-    
 }
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (login);
-
 
 /***/ }),
 
@@ -826,11 +573,12 @@ function login(){
   \*******************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 /* harmony import */ var _renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./renderTheCalendar */ "./js/modules/windows/calendarWindow/functions/renderTheCalendar.js");
 
 
@@ -880,24 +628,39 @@ function moveVaults(){
                             let rightMeasure = eachEvent.getBoundingClientRect().right;  
 
                             if(event.pageX>leftMeasure && event.pageX<rightMeasure && event.pageY>topMeasure && event.pageY<bottomMeasure){
-                                store.state.forEach((chosenEvent)=>{
-                                    if(chosenEvent.id==eachEvent.getAttribute('id')){
-                                        store.state.forEach((deleteEvent)=>{
-                                            if(deleteEvent.id==vaultsForMoving[i].getAttribute('id')){
-                                                if(chosenEvent.isOrdered){
-                                                    return;
-                                                }else{
-                                                    (0,_store_store__WEBPACK_IMPORTED_MODULE_0__.fillTheVault)(chosenEvent, deleteEvent.text, deleteEvent.members);
-                                                    (0,_store_store__WEBPACK_IMPORTED_MODULE_0__.emptyTheVault)(deleteEvent);
+                                (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('events')
+                                .then(events=>{
+                                    events.forEach(obj=>{
+                                        let newObj = (0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToObject)(obj.data);
+                                        if(newObj.id==eachEvent.getAttribute('id')){
+                                            events.forEach(obj2=>{
+                                                let newObjDel = (0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToObject)(obj2.data);
+                                                if(newObjDel.id==vaultsForMoving[i].getAttribute('id')){
+                                                    if(newObj.isOrdered){
+                                                        return;
+                                                    }else{
+                                                        let eId = obj2.id;
+                                                        let emptyObj = JSON.stringify({data:`{id:${newObjDel.id},isOrdered:false,text:'',members:[]}`,id:"string"});
+                                                        (0,_api__WEBPACK_IMPORTED_MODULE_0__.putData)(`events/${eId}`, emptyObj)
+                                                        .then(()=>{
+                                                            let eIdN = obj.id;
+                                                            let newPh = newObjDel.members.join("','");
+                                                            let filledObj = JSON.stringify({data:`{id:${newObj.id},isOrdered:true,text:'${newObjDel.text}',members:['${newPh}']}`,id:"string"});
+                                                            (0,_api__WEBPACK_IMPORTED_MODULE_0__.putData)(`events/${eIdN}`, filledObj)
+                                                            .then(()=>{
+                                                                element.remove();
+                                                                (0,_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
+                                                                moveVaults();
+                                                            });
+                                                        });
+                                                    }
                                                 }
-                                            }
-                                        });
-                                    }
+                                            });   
+                                        }    
+                                    });
                                 });
                             }
                         });
-                        element.remove();
-                        (0,_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
                     }, {once: true});
                 }
 
@@ -919,19 +682,18 @@ function moveVaults(){
   \**************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
-/* harmony import */ var _filterMembers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filterMembers */ "./js/modules/windows/calendarWindow/functions/filterMembers.js");
-/* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./login */ "./js/modules/windows/calendarWindow/functions/login.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
+/* harmony import */ var _calendarWindow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../calendarWindow */ "./js/modules/windows/calendarWindow/calendarWindow.js");
+/* harmony import */ var _filterMembers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filterMembers */ "./js/modules/windows/calendarWindow/functions/filterMembers.js");
 /* harmony import */ var _vaultsClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vaultsClass */ "./js/modules/windows/calendarWindow/functions/vaultsClass.js");
 
-//import deleteEvent from "./deleteEvent";
 
 
-//import moveVaults from "./moveVaults";
 
 
 function renderTheCalendar(){
@@ -943,23 +705,23 @@ function renderTheCalendar(){
         item.remove();
     })
 
-    _store_store__WEBPACK_IMPORTED_MODULE_0__.default.state.forEach((item, i)=>{
-        if(item.isOrdered){
-            display = "grid";
-        } else {
-            display = "none";
+    ;(0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('events')
+    .then(events=>{
+        events.forEach(obj=>{
+            let newObj = (0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToObject)(obj.data);
+            if(newObj.isOrdered){
+                display = "grid";
+            } else {
+                display = "none";
+            }
+            new _vaultsClass__WEBPACK_IMPORTED_MODULE_3__.default(vaultsWrapper, newObj.text, newObj.isOrdered, display, newObj.id).render();
+        });
+        (0,_filterMembers__WEBPACK_IMPORTED_MODULE_2__.default)();
+        if(_calendarWindow__WEBPACK_IMPORTED_MODULE_1__.logedUser){
+            _calendarWindow__WEBPACK_IMPORTED_MODULE_1__.logedUser.deleteTheEvent();
+            _calendarWindow__WEBPACK_IMPORTED_MODULE_1__.logedUser.moveTheEvent();
         }
-        new _vaultsClass__WEBPACK_IMPORTED_MODULE_3__.default(vaultsWrapper, item.text, item.isOrdered, display, item.id).render();
     });
-    //moveVaults();
-    (0,_filterMembers__WEBPACK_IMPORTED_MODULE_1__.default)();
-    //deleteEvent();
-    if(_login__WEBPACK_IMPORTED_MODULE_2__.logedUser){
-        _login__WEBPACK_IMPORTED_MODULE_2__.logedUser.moveTheEvent();
-    }
-    if(_login__WEBPACK_IMPORTED_MODULE_2__.logedUser){
-        _login__WEBPACK_IMPORTED_MODULE_2__.logedUser.deleteTheEvent();
-    }
     
 }
 
@@ -973,6 +735,7 @@ function renderTheCalendar(){
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1012,6 +775,7 @@ class Vaults{
   \****************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "localCalendarStorage": () => (/* binding */ localCalendarStorage),
@@ -1058,6 +822,7 @@ function pushMembersStorage(pushedElement){
   \*****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1083,11 +848,12 @@ function cancelButton(){
   \*****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../api */ "./js/modules/api.js");
 /* harmony import */ var _calendarWindow_functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../calendarWindow/functions/renderTheCalendar */ "./js/modules/windows/calendarWindow/functions/renderTheCalendar.js");
 /* harmony import */ var _functions_clearTheForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../functions/clearTheForm */ "./js/modules/windows/createWindow/functions/clearTheForm.js");
 /* harmony import */ var _functions_openErrorWindow__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../functions/openErrorWindow */ "./js/modules/windows/createWindow/functions/openErrorWindow.js");
@@ -1114,18 +880,28 @@ function createButton(){
             (0,_functions_openErrorWindow__WEBPACK_IMPORTED_MODULE_3__.default)("time");
         }else{
             chosenSlotId = _localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_4__.localCreatorStorage.chosenSlotStorage[0]+_localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_4__.localCreatorStorage.chosenSlotStorage[1];
-    
-            _store_store__WEBPACK_IMPORTED_MODULE_0__.default.state.forEach((item, i)=>{
-                if(item.id==chosenSlotId){
-                    if(item.isOrdered==true){
-                        (0,_functions_openErrorWindow__WEBPACK_IMPORTED_MODULE_3__.default)("slot");
-                    }else{
-                        (0,_store_store__WEBPACK_IMPORTED_MODULE_0__.fillTheVault)(item, nameOfTheEvent.value, _localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_4__.localCreatorStorage.membersStorage);
-                        (0,_functions_clearTheForm__WEBPACK_IMPORTED_MODULE_2__.default)();
-                        (0,_calendarWindow_functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
+            
+            (0,_api__WEBPACK_IMPORTED_MODULE_0__.getData)('events')
+            .then(events=>{
+                events.forEach(obj=>{
+                    let newObj = (0,_api__WEBPACK_IMPORTED_MODULE_0__.fromStringToObject)(obj.data);
+                    if(newObj.id==chosenSlotId){
+                        if(newObj.isOrdered==true){
+                            (0,_functions_openErrorWindow__WEBPACK_IMPORTED_MODULE_3__.default)("slot");
+                        }else{
+                            let eId = obj.id;
+                            let newPh = _localCreatorStorage_localCreatorStorage__WEBPACK_IMPORTED_MODULE_4__.localCreatorStorage.membersStorage.join("','");
+                            let filledObj = JSON.stringify({data:`{id:${newObj.id},isOrdered:true,text:'${nameOfTheEvent.value}',members:['${newPh}']}`,id:"string"});
+                            (0,_api__WEBPACK_IMPORTED_MODULE_0__.putData)(`events/${eId}`, filledObj)
+                                .then(()=>{
+                                    (0,_calendarWindow_functions_renderTheCalendar__WEBPACK_IMPORTED_MODULE_1__.default)();
+                                    (0,_functions_clearTheForm__WEBPACK_IMPORTED_MODULE_2__.default)();
+                                });
+                        }
                     }
-                }
+                });
             });
+
         }
     });
 }
@@ -1140,6 +916,7 @@ function createButton(){
   \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1164,6 +941,7 @@ function inputButton(){
   \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1329,6 +1107,7 @@ function listButtons(){
   \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1363,6 +1142,7 @@ function creationComponent(){
   \*******************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1407,6 +1187,7 @@ function clearTheForm(){
   \******************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1459,6 +1240,7 @@ function errorRender(){
   \**********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1488,6 +1270,7 @@ function openErrorWindow(dataError){
   \************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "localCreatorStorage": () => (/* binding */ localCreatorStorage),
@@ -1537,8 +1320,10 @@ function emptyChosenSlotStorage(){
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_store_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/store/store */ "./js/modules/store/store.js");
+/* harmony import */ var _modules_store_store__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_modules_store_store__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _modules_windows_calendarWindow_calendarWindow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/windows/calendarWindow/calendarWindow */ "./js/modules/windows/calendarWindow/calendarWindow.js");
 /* harmony import */ var _modules_windows_createWindow_createWindow__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/windows/createWindow/createWindow */ "./js/modules/windows/createWindow/createWindow.js");
 
@@ -1548,7 +1333,7 @@ __webpack_require__.r(__webpack_exports__);
 window.addEventListener("DOMContentLoaded",()=>{
     (0,_modules_windows_calendarWindow_calendarWindow__WEBPACK_IMPORTED_MODULE_1__.default)();
     (0,_modules_windows_createWindow_createWindow__WEBPACK_IMPORTED_MODULE_2__.default)();
-    window.store = _modules_store_store__WEBPACK_IMPORTED_MODULE_0__.default; // it helps to explore the store in the browser console
+    window.store = (_modules_store_store__WEBPACK_IMPORTED_MODULE_0___default()); // it helps to explore the store in the browser console
 });
 
 /***/ })
@@ -1579,6 +1364,18 @@ window.addEventListener("DOMContentLoaded",()=>{
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
